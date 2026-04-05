@@ -159,7 +159,7 @@ let currentSessionId = null;
 
 async function generateQR() {
 
-  const res = await fetch("http://127.0.0.1:3000/generate", {
+  const res = await fetch("http://10.0.0.65:3000/generate", {
     method: "POST"
   });
 
@@ -187,7 +187,7 @@ async function loadAttendance() {
   if (!currentSessionId) return;
 
   const res = await fetch(
-    `http://127.0.0.1:3000/attendance/${currentSessionId}`
+    `http://10.0.0.65:3000/attendance/${currentSessionId}`
   );
 
   const data = await res.json();
@@ -225,7 +225,7 @@ function exportCSV() {
   }
 
   window.open(
-    `http://127.0.0.1:3000/export/${currentSessionId}`,
+    `http://10.0.0.65:3000/export/${currentSessionId}`,
     "_blank"
   );
 }
