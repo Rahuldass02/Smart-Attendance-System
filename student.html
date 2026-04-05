@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student QR Scan</title>
+
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+    }
+
+    .scan-card {
+      background: white;
+      max-width: 400px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    #reader {
+      border: 3px dashed #2563eb;
+      border-radius: 15px;
+      padding: 10px;
+      margin-top: 20px;
+    }
+
+    #resultMsg {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 8px 15px;
+      border: none;
+      background: #ef4444;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #dc2626;
+    }
+  </style>
+</head>
+
+<body>
+
+<script>
+  // 🔒 Protect student page
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user || user.role !== "student") {
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="scan-card">
+  <h2>Scan Attendance QR</h2>
+
+  <div id="reader"></div>
+
+  <p id="resultMsg">Waiting for scan...</p>
+
+  <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+
+const resultMsg = document.getElementById("resultMsg");
+
+function onScanSuccess(decodedText) {
+
+  fetch("http://127.0.0.1:3000/scan", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      sessionId: decodedText,
+      studentId: user.id
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+
+    resultMsg.innerText = data.message;
+
+    if (data.success) {
+      resultMsg.style.color = "green";
+      scanner.clear();  // Stop camera after success
+    } else {
+      resultMsg.style.color = "red";
+    }
+
+  })
+  .catch(() => {
+    resultMsg.innerText = "Server error.";
+    resultMsg.style.color = "red";
+  });
+}
+
+// Initialize Scanner
+const scanner = new Html5QrcodeScanner("reader", {
+  fps: 10,
+  qrbox: 250
+});
+
+scanner.render(onScanSuccess);
+
+// Logout
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>

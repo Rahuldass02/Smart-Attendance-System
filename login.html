@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Attendance - Login</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #2563eb, #4f46e5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      color: #111;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #errorMsg {
+      color: red;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Smart Attendance Login</h2>
+
+  <input type="email" id="email" placeholder="Enter your email" required>
+
+  <select id="role">
+    <option value="student">Student</option>
+    <option value="instructor">Instructor</option>
+  </select>
+
+  <button onclick="login()">Login</button>
+
+  <p id="errorMsg"></p>
+</div>
+
+<script>
+async function login() {
+
+  const email = document.getElementById("email").value;
+  const role = document.getElementById("role").value;
+
+  if (!email) {
+    document.getElementById("errorMsg").innerText = "Please enter email.";
+    return;
+  }
+
+  try {
+
+    const res = await fetch("http://127.0.0.1:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, role })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      if (role === "instructor") {
+        window.location.href = "instructor.html";
+      } else {
+        window.location.href = "student.html";
+      }
+
+    } else {
+      document.getElementById("errorMsg").innerText = data.message;
+    }
+
+  } catch (error) {
+    document.getElementById("errorMsg").innerText = "Server error. Is backend running?";
+  }
+}
+</script>
+
+</body>
+</html>

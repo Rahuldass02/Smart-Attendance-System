@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Instructor Dashboard</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #2563eb, #4f46e5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 950px;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #111827;
+    }
+
+    .card {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    button {
+      padding: 10px 18px;
+      margin: 6px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      color: white;
+    }
+
+    .generate-btn {
+      background: #16a34a;
+    }
+
+    .generate-btn:hover {
+      background: #15803d;
+    }
+
+    .export-btn {
+      background: #2563eb;
+    }
+
+    .export-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .logout-btn {
+      background: #ef4444;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+    }
+
+    #qrMsg {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    #qrOutput img {
+      margin-top: 15px;
+      border-radius: 10px;
+    }
+
+    #count {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      transition: 0.3s ease;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #2563eb;
+      color: white;
+      padding: 12px;
+    }
+
+    td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tr:hover {
+      background: #f3f4f6;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user || user.role !== "instructor") {
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="container">
+
+  <h2>Instructor Dashboard</h2>
+
+  <div class="card">
+    <button class="generate-btn" onclick="generateQR()">Generate QR</button>
+    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <p id="qrMsg"></p>
+    <div id="qrOutput"></div>
+  </div>
+
+  <div id="count">Total Present: 0</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Student</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody id="attendanceList"></tbody>
+  </table>
+
+</div>
+
+<script>
+
+let currentSessionId = null;
+
+async function generateQR() {
+
+  const res = await fetch("http://127.0.0.1:3000/generate", {
+    method: "POST"
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+
+    currentSessionId = data.sessionId;
+
+    document.getElementById("qrOutput").innerHTML =
+      `<img src="${data.qrImage}" width="200"/>`;
+
+    document.getElementById("qrMsg").innerText =
+      "Session Active (ID: " + currentSessionId + ")";
+
+    loadAttendance();
+
+  } else {
+    document.getElementById("qrMsg").innerText = "Error generating QR";
+  }
+}
+
+async function loadAttendance() {
+
+  if (!currentSessionId) return;
+
+  const res = await fetch(
+    `http://127.0.0.1:3000/attendance/${currentSessionId}`
+  );
+
+  const data = await res.json();
+
+  const tbody = document.getElementById("attendanceList");
+  tbody.innerHTML = "";
+
+  data.forEach((student, index) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${student.name}</td>
+        <td>${student.time}</td>
+      </tr>
+    `;
+  });
+
+  const countElement = document.getElementById("count");
+  countElement.innerText = "Total Present: " + data.length;
+
+  if (data.length > 0) {
+    countElement.style.color = "green";
+  } else {
+    countElement.style.color = "black";
+  }
+}
+
+setInterval(loadAttendance, 3000);
+
+function exportCSV() {
+
+  if (!currentSessionId) {
+    alert("Generate a session first.");
+    return;
+  }
+
+  window.open(
+    `http://127.0.0.1:3000/export/${currentSessionId}`,
+    "_blank"
+  );
+}
+
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>
