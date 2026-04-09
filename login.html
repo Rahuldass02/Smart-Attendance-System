@@ -1,121 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Smart Attendance - Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Attendance</title>
 
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #2563eb, #4f46e5);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(129, 140, 248, 0.35), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.35), transparent 30%),
+        linear-gradient(135deg, #2d2a7b, #4338ca, #312e81);
     }
 
-    .box {
-      background: white;
-      padding: 40px;
-      border-radius: 15px;
-      width: 350px;
+    .container {
+      width: 1120px;
+      max-width: 100%;
+      min-height: 620px;
+      display: flex;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+    }
+
+    .left {
+      flex: 1.15;
+      position: relative;
+      padding: 60px 55px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #eef2ff, #e9edff);
+      overflow: hidden;
+    }
+
+    .left::before,
+    .left::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.08);
+    }
+
+    .left::before {
+      width: 260px;
+      height: 260px;
+      top: -80px;
+      left: -80px;
+    }
+
+    .left::after {
+      width: 220px;
+      height: 220px;
+      bottom: -70px;
+      right: -60px;
+    }
+
+    .left-content {
+      position: relative;
+      z-index: 2;
+      max-width: 420px;
       text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    h2 {
-      margin-bottom: 25px;
-      color: #111;
+    .icon-wrap {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 28px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffffff, #dbe4ff);
+      box-shadow:
+        0 18px 35px rgba(99, 102, 241, 0.18),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      font-size: 62px;
     }
 
-    input, select, button {
+    .tag {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(79, 70, 229, 0.10);
+      color: #4338ca;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .left h1 {
+      font-size: 48px;
+      line-height: 1.1;
+      color: #0f172a;
+      margin-bottom: 18px;
+      font-weight: 800;
+    }
+
+    .left p {
+      font-size: 18px;
+      line-height: 1.8;
+      color: #5b6478;
+      margin-bottom: 28px;
+    }
+
+    .feature-list {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .feature {
+      padding: 10px 16px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .right {
+      flex: 0.95;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 48px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(10px);
+    }
+
+    .login-box {
       width: 100%;
-      padding: 12px;
-      margin: 12px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      max-width: 380px;
+    }
+
+    .login-box h2 {
+      font-size: 42px;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
       font-size: 16px;
+      margin-bottom: 34px;
     }
 
-    button {
-      background: #2563eb;
-      color: white;
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid #d6d9e4;
+      outline: none;
+      font-size: 16px;
+      background: #ffffff;
+      color: #111827;
+      transition: 0.25s ease;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 17px;
+      margin-top: 12px;
       border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
       cursor: pointer;
-      transition: 0.3s;
+      transition: 0.25s ease;
+      box-shadow: 0 18px 30px rgba(79, 70, 229, 0.28);
     }
 
-    button:hover {
-      background: #1d4ed8;
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 36px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn:active {
+      transform: translateY(0);
     }
 
     #errorMsg {
-      color: red;
+      min-height: 22px;
+      margin-top: 14px;
+      text-align: center;
       font-size: 14px;
+      font-weight: 600;
+      color: #dc2626;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left,
+      .right {
+        width: 100%;
+      }
+
+      .left {
+        padding: 45px 28px 30px;
+      }
+
+      .right {
+        padding: 36px 24px 42px;
+      }
+
+      .left h1 {
+        font-size: 36px;
+      }
+
+      .login-box h2 {
+        font-size: 34px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="box">
-  <h2>Smart Attendance Login</h2>
+  <div class="container">
+    <div class="left">
+      <div class="left-content">
+        <div class="icon-wrap">📊</div>
+        <div class="tag">SMART QR ATTENDANCE</div>
+        <h1>Smart Attendance</h1>
+        <p>
+          Track attendance quickly and professionally with a secure QR-based
+          system designed for both students and instructors.
+        </p>
 
-  <input type="email" id="email" placeholder="Enter your email" required>
+        <div class="feature-list">
+          <div class="feature">Fast Login</div>
+          <div class="feature">QR Scanning</div>
+          <div class="feature">Live Records</div>
+        </div>
+      </div>
+    </div>
 
-  <select id="role">
-    <option value="student">Student</option>
-    <option value="instructor">Instructor</option>
-  </select>
+    <div class="right">
+      <div class="login-box">
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Sign in to continue to your dashboard</p>
 
-  <button onclick="login()">Login</button>
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" />
+        </div>
 
-  <p id="errorMsg"></p>
-</div>
+        <div class="input-group">
+          <label for="role">Role</label>
+          <select id="role">
+            <option value="student">Student</option>
+            <option value="instructor">Instructor</option>
+          </select>
+        </div>
 
-<script>
-async function login() {
+        <button class="btn" onclick="login()">Sign In</button>
 
-  const email = document.getElementById("email").value;
-  const role = document.getElementById("role").value;
+        <p id="errorMsg"></p>
+        <div class="footer">Smart Attendance System</div>
+      </div>
+    </div>
+  </div>
 
-  if (!email) {
-    document.getElementById("errorMsg").innerText = "Please enter email.";
-    return;
-  }
+  <script>
+    async function login() {
+      const email = document.getElementById("email").value;
+      const role = document.getElementById("role").value;
+      const errorMsg = document.getElementById("errorMsg");
 
-  try {
+      errorMsg.innerText = "";
 
-    const res = await fetch("http://10.0.0.65:3000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, role })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      if (role === "instructor") {
-        window.location.href = "instructor.html";
-      } else {
-        window.location.href = "student.html";
+      if (!email) {
+        errorMsg.innerText = "Please enter email.";
+        return;
       }
 
-    } else {
-      document.getElementById("errorMsg").innerText = data.message;
-    }
+      try {
+        const res = await fetch("http://10.0.0.65:3000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, role })
+        });
 
-  } catch (error) {
-    document.getElementById("errorMsg").innerText = "Server error. Is backend running?";
-  }
-}
-</script>
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          if (role === "instructor") {
+            window.location.href = "instructor.html";
+          } else {
+            window.location.href = "student.html";
+          }
+        } else {
+          errorMsg.innerText = data.message;
+        }
+      } catch (error) {
+        errorMsg.innerText = "Server error. Is backend running?";
+      }
+    }
+  </script>
 
 </body>
 </html>
