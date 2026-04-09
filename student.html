@@ -1,58 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Student QR Scan</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Attendance Scanner</title>
 
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6f9;
-      text-align: center;
-      padding: 50px;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .scan-card {
-      background: white;
-      max-width: 400px;
-      margin: auto;
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1d4ed8, #4338ca, #6366f1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      color: #111827;
     }
 
-    h2 {
+    .page-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      min-height: 650px;
+    }
+
+    .left-panel {
+      background: linear-gradient(160deg, #1e3a8a, #2563eb, #4f46e5);
+      color: white;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-panel::before,
+    .left-panel::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .left-panel::before {
+      width: 220px;
+      height: 220px;
+      top: -60px;
+      left: -60px;
+    }
+
+    .left-panel::after {
+      width: 260px;
+      height: 260px;
+      bottom: -100px;
+      right: -80px;
+    }
+
+    .logo-box {
+      width: 90px;
+      height: 90px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 42px;
+      margin-bottom: 25px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
       margin-bottom: 20px;
+      z-index: 1;
+      width: fit-content;
+    }
+
+    .left-panel h1 {
+      font-size: 44px;
+      line-height: 1.1;
+      margin-bottom: 18px;
+      z-index: 1;
+    }
+
+    .left-panel p {
+      font-size: 17px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.92);
+      max-width: 420px;
+      z-index: 1;
+      margin-bottom: 30px;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      z-index: 1;
+    }
+
+    .feature-item {
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.13);
+      font-size: 14px;
+      font-weight: 600;
+      backdrop-filter: blur(6px);
+    }
+
+    .right-panel {
+      padding: 45px 40px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .top-text {
+      margin-bottom: 25px;
+    }
+
+    .top-text h2 {
+      font-size: 34px;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .top-text p {
+      color: #6b7280;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .scanner-card {
+      background: white;
+      border-radius: 22px;
+      padding: 24px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .scanner-card h3 {
+      font-size: 20px;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .scanner-card .scanner-subtext {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 20px;
+      line-height: 1.6;
     }
 
     #reader {
-      border: 3px dashed #2563eb;
-      border-radius: 15px;
-      padding: 10px;
+      width: 100%;
+      border: 2px dashed #3b82f6;
+      border-radius: 18px;
+      padding: 14px;
+      background: #f9fafb;
+      overflow: hidden;
+    }
+
+    #reader video {
+      border-radius: 14px !important;
+    }
+
+    .status-box {
       margin-top: 20px;
+      padding: 16px;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #1d4ed8;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     #resultMsg {
-      font-weight: bold;
-      margin-top: 20px;
-      font-size: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+      flex-wrap: wrap;
     }
 
     button {
-      margin-top: 15px;
-      padding: 8px 15px;
       border: none;
-      background: #ef4444;
-      color: white;
-      border-radius: 6px;
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
+      transition: 0.3s ease;
     }
 
-    button:hover {
+    .refresh-btn {
+      background: linear-gradient(to right, #2563eb, #3b82f6);
+      color: white;
+    }
+
+    .refresh-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
+    }
+
+    .logout-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .logout-btn:hover {
       background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .page-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .left-panel {
+        padding: 35px 25px;
+      }
+
+      .right-panel {
+        padding: 30px 20px;
+      }
+
+      .left-panel h1 {
+        font-size: 34px;
+      }
+
+      .top-text h2 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 15px;
+      }
+
+      .scanner-card {
+        padding: 18px;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -67,59 +307,121 @@
   }
 </script>
 
-<div class="scan-card">
-  <h2>Scan Attendance QR</h2>
-  <div id="reader"></div>
-  <p id="resultMsg">Waiting for scan...</p>
-  <button onclick="logout()">Logout</button>
+<div class="page-wrapper">
+
+  <div class="left-panel">
+    <div class="logo-box">📷</div>
+    <div class="badge">SMART ATTENDANCE</div>
+    <h1>Student Attendance Scanner</h1>
+    <p>
+      Scan the QR code provided by your instructor to mark your attendance
+      quickly, securely, and accurately.
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">Fast Check-In</div>
+      <div class="feature-item">Live QR Scanning</div>
+      <div class="feature-item">Secure Attendance</div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="top-text">
+      <h2>Scan Attendance QR</h2>
+      <p>
+        Use your camera to scan the attendance QR code. Make sure the QR code
+        is clearly visible inside the scanner area.
+      </p>
+    </div>
+
+    <div class="scanner-card">
+      <h3>QR Scanner</h3>
+      <p class="scanner-subtext">
+        Place the QR code in front of the camera. Once scanned, your attendance
+        will be submitted automatically.
+      </p>
+
+      <div id="reader"></div>
+
+      <div class="status-box">
+        <div class="status-label">Scan Status</div>
+        <p id="resultMsg">Waiting for scan...</p>
+      </div>
+
+      <div class="button-row">
+        <button class="refresh-btn" onclick="restartScanner()">Restart Scanner</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+
+      <div class="footer-note">Student Attendance System</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-const resultMsg = document.getElementById("resultMsg");
+  const resultMsg = document.getElementById("resultMsg");
 
-// CHANGE THIS TO YOUR LAPTOP IP
-const BACKEND_URL = "http://10.0.0.65:3000";
+  const BACKEND_URL = "http://10.0.0.65:3000";
+  let scanner;
 
-function onScanSuccess(decodedText) {
-  fetch(`${BACKEND_URL}/scan`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      sessionId: decodedText,
-      studentId: user.id
+  function showMessage(message, color, bgColor, borderColor) {
+    resultMsg.innerText = message;
+    resultMsg.style.color = color;
+
+    const statusBox = document.querySelector(".status-box");
+    statusBox.style.background = bgColor;
+    statusBox.style.borderColor = borderColor;
+  }
+
+  function onScanSuccess(decodedText) {
+    fetch(`${BACKEND_URL}/scan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        sessionId: decodedText,
+        studentId: user.id
+      })
     })
-  })
-  .then(res => res.json())
-  .then(data => {
-    resultMsg.innerText = data.message;
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        showMessage(data.message, "#166534", "#f0fdf4", "#86efac");
+        scanner.clear();
+      } else {
+        showMessage(data.message, "#b91c1c", "#fef2f2", "#fca5a5");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      showMessage("Server error. Please try again.", "#b91c1c", "#fef2f2", "#fca5a5");
+    });
+  }
 
-    if (data.success) {
-      resultMsg.style.color = "green";
-      scanner.clear();
-    } else {
-      resultMsg.style.color = "red";
-    }
-  })
-  .catch((error) => {
-    console.error(error);
-    resultMsg.innerText = "Server error.";
-    resultMsg.style.color = "red";
-  });
-}
+  function startScanner() {
+    document.getElementById("reader").innerHTML = "";
 
-const scanner = new Html5QrcodeScanner("reader", {
-  fps: 10,
-  qrbox: 250
-});
+    scanner = new Html5QrcodeScanner("reader", {
+      fps: 10,
+      qrbox: 250
+    });
 
-scanner.render(onScanSuccess);
+    scanner.render(onScanSuccess);
+    showMessage("Waiting for scan...", "#374151", "#eff6ff", "#bfdbfe");
+  }
 
-function logout() {
-  localStorage.removeItem("user");
-  window.location.href = "login.html";
-}
+  function restartScanner() {
+    startScanner();
+  }
+
+  function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+  }
+
+  startScanner();
 </script>
 
 </body>

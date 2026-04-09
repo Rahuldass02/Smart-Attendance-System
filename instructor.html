@@ -1,118 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instructor Dashboard</title>
 
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #2563eb, #4f46e5);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1d4ed8, #4338ca, #6366f1);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-
-    .container {
-      width: 95%;
-      max-width: 950px;
-      background: white;
       padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
       color: #111827;
     }
 
-    .card {
-      text-align: center;
-      margin-bottom: 25px;
+    .dashboard-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
     }
 
-    button {
-      padding: 10px 18px;
-      margin: 6px;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.3s ease;
+    .topbar {
+      background: linear-gradient(to right, #1e3a8a, #2563eb);
       color: white;
+      padding: 22px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
-    .generate-btn {
-      background: #16a34a;
+    .topbar h1 {
+      font-size: 28px;
+      font-weight: 700;
     }
 
-    .generate-btn:hover {
-      background: #15803d;
-    }
-
-    .export-btn {
-      background: #2563eb;
-    }
-
-    .export-btn:hover {
-      background: #1d4ed8;
+    .topbar p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 4px;
     }
 
     .logout-btn {
       background: #ef4444;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s ease;
     }
 
     .logout-btn:hover {
       background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card h3 {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .panel h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .panel-subtext {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    button.action-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s ease;
+    }
+
+    .generate-btn {
+      background: linear-gradient(to right, #16a34a, #22c55e);
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(34, 197, 94, 0.25);
+    }
+
+    .export-btn {
+      background: linear-gradient(to right, #2563eb, #3b82f6);
+    }
+
+    .export-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
     }
 
     #qrMsg {
-      margin-top: 10px;
-      font-weight: bold;
+      margin: 15px 0 12px;
+      font-size: 14px;
+      font-weight: 600;
       color: #374151;
+      text-align: center;
+    }
+
+    #qrOutput {
+      text-align: center;
+      margin-top: 10px;
     }
 
     #qrOutput img {
-      margin-top: 15px;
-      border-radius: 10px;
+      width: 200px;
+      max-width: 100%;
+      border-radius: 14px;
+      border: 1px solid #dbeafe;
+      padding: 10px;
+      background: #f9fafb;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .attendance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .attendance-header h2 {
+      margin-bottom: 0;
     }
 
     #count {
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 20px;
-      transition: 0.3s ease;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      border-radius: 10px;
-      overflow: hidden;
+      min-width: 500px;
+      background: white;
+    }
+
+    thead {
+      background: #2563eb;
+      color: white;
     }
 
     th {
-      background: #2563eb;
-      color: white;
-      padding: 12px;
+      padding: 16px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 700;
     }
 
     td {
-      padding: 10px;
-      text-align: center;
+      padding: 15px 16px;
       border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      color: #374151;
     }
 
-    tr:hover {
-      background: #f3f4f6;
+    tbody tr:hover {
+      background: #f8fafc;
     }
 
+    .empty-state {
+      text-align: center;
+      color: #9ca3af;
+      padding: 25px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 992px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      .topbar {
+        padding: 20px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .topbar h1 {
+        font-size: 22px;
+      }
+
+      .stat-card .value {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
 
@@ -125,116 +299,166 @@
   }
 </script>
 
-<div class="container">
+<div class="dashboard-wrapper">
 
-  <h2>Instructor Dashboard</h2>
-
-  <div class="card">
-    <button class="generate-btn" onclick="generateQR()">Generate QR</button>
-    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+  <div class="topbar">
+    <div>
+      <h1>Instructor Dashboard</h1>
+      <p>Manage attendance sessions, generate QR codes, and export attendance records.</p>
+    </div>
     <button class="logout-btn" onclick="logout()">Logout</button>
-
-    <p id="qrMsg"></p>
-    <div id="qrOutput"></div>
   </div>
 
-  <div id="count">Total Present: 0</div>
+  <div class="content">
 
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Student</th>
-        <th>Time</th>
-      </tr>
-    </thead>
-    <tbody id="attendanceList"></tbody>
-  </table>
+    <div class="stats-row">
+      <div class="stat-card">
+        <h3>Current Session</h3>
+        <div class="value" id="sessionStatus">Inactive</div>
+      </div>
 
+      <div class="stat-card">
+        <h3>Total Present</h3>
+        <div class="value" id="presentCount">0</div>
+      </div>
+
+      <div class="stat-card">
+        <h3>Export Status</h3>
+        <div class="value" id="exportStatus">Ready</div>
+      </div>
+    </div>
+
+    <div class="main-grid">
+
+      <div class="panel">
+        <h2>Session Controls</h2>
+        <p class="panel-subtext">Start a new session, generate a QR code, and download the attendance file.</p>
+
+        <div class="action-buttons">
+          <button class="action-btn generate-btn" onclick="generateQR()">Generate QR Code</button>
+          <button class="action-btn export-btn" onclick="exportCSV()">Export Attendance CSV</button>
+        </div>
+
+        <p id="qrMsg">No active session yet.</p>
+        <div id="qrOutput"></div>
+      </div>
+
+      <div class="panel">
+        <div class="attendance-header">
+          <div>
+            <h2>Attendance Records</h2>
+            <p class="panel-subtext">Live student attendance list for the current session.</p>
+          </div>
+          <div id="count">Total Present: 0</div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 80px;">#</th>
+                <th>Student Name</th>
+                <th style="width: 220px;">Time</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceList">
+              <tr>
+                <td colspan="3" class="empty-state">No attendance records yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <script>
+  let currentSessionId = null;
 
-let currentSessionId = null;
+  async function generateQR() {
+    try {
+      const res = await fetch("http://10.0.0.65:3000/generate", {
+        method: "POST"
+      });
 
-async function generateQR() {
+      const data = await res.json();
 
-  const res = await fetch("http://10.0.0.65:3000/generate", {
-    method: "POST"
-  });
+      if (data.success) {
+        currentSessionId = data.sessionId;
 
-  const data = await res.json();
+        document.getElementById("qrOutput").innerHTML =
+          `<img src="${data.qrImage}" alt="QR Code">`;
 
-  if (data.success) {
+        document.getElementById("qrMsg").innerText =
+          "Session Active (ID: " + currentSessionId + ")";
 
-    currentSessionId = data.sessionId;
+        document.getElementById("sessionStatus").innerText = "Active";
+        document.getElementById("sessionStatus").style.color = "#16a34a";
 
-    document.getElementById("qrOutput").innerHTML =
-      `<img src="${data.qrImage}" width="200"/>`;
-
-    document.getElementById("qrMsg").innerText =
-      "Session Active (ID: " + currentSessionId + ")";
-
-    loadAttendance();
-
-  } else {
-    document.getElementById("qrMsg").innerText = "Error generating QR";
-  }
-}
-
-async function loadAttendance() {
-
-  if (!currentSessionId) return;
-
-  const res = await fetch(
-    `http://10.0.0.65:3000/attendance/${currentSessionId}`
-  );
-
-  const data = await res.json();
-
-  const tbody = document.getElementById("attendanceList");
-  tbody.innerHTML = "";
-
-  data.forEach((student, index) => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${student.name}</td>
-        <td>${student.time}</td>
-      </tr>
-    `;
-  });
-
-  const countElement = document.getElementById("count");
-  countElement.innerText = "Total Present: " + data.length;
-
-  if (data.length > 0) {
-    countElement.style.color = "green";
-  } else {
-    countElement.style.color = "black";
-  }
-}
-
-setInterval(loadAttendance, 3000);
-
-function exportCSV() {
-
-  if (!currentSessionId) {
-    alert("Generate a session first.");
-    return;
+        loadAttendance();
+      } else {
+        document.getElementById("qrMsg").innerText = "Error generating QR code.";
+      }
+    } catch (error) {
+      document.getElementById("qrMsg").innerText = "Server connection error.";
+    }
   }
 
-  window.open(
-    `http://10.0.0.65:3000/export/${currentSessionId}`,
-    "_blank"
-  );
-}
+  async function loadAttendance() {
+    if (!currentSessionId) return;
 
-function logout() {
-  localStorage.removeItem("user");
-  window.location.href = "login.html";
-}
+    try {
+      const res = await fetch(`http://10.0.0.65:3000/attendance/${currentSessionId}`);
+      const data = await res.json();
 
+      const tbody = document.getElementById("attendanceList");
+      tbody.innerHTML = "";
+
+      if (data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="empty-state">No attendance records yet.</td>
+          </tr>
+        `;
+      } else {
+        data.forEach((student, index) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${student.name}</td>
+              <td>${student.time}</td>
+            </tr>
+          `;
+        });
+      }
+
+      document.getElementById("count").innerText = "Total Present: " + data.length;
+      document.getElementById("presentCount").innerText = data.length;
+    } catch (error) {
+      console.log("Error loading attendance:", error);
+    }
+  }
+
+  setInterval(loadAttendance, 3000);
+
+  function exportCSV() {
+    if (!currentSessionId) {
+      alert("Please generate a session first.");
+      return;
+    }
+
+    document.getElementById("exportStatus").innerText = "Exported";
+    document.getElementById("exportStatus").style.color = "#2563eb";
+
+    window.open(`http://10.0.0.65:3000/export/${currentSessionId}`, "_blank");
+  }
+
+  function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+  }
 </script>
 
 </body>
