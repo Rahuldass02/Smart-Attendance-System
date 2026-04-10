@@ -363,7 +363,7 @@
   const resultMsg = document.getElementById("resultMsg");
 
   const BACKEND_URL = "http://localhost:3000";
-  let scanner;
+  let html5QrCode;
 
   function showMessage(message, color, bgColor, borderColor) {
     resultMsg.innerText = message;
@@ -376,20 +376,23 @@
 
   function onScanSuccess(decodedText) {
     fetch(`${BACKEND_URL}/scan`, {
+      
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        sessionId: decodedText,
-        studentId: user.id
+        sessionId: decodedText.replace(/\D/g, ""),
+        studentId: user.email
+        
       })
     })
     .then(res => res.json())
     .then(data => {
+      console.log("Scan response:", data);
       if (data.success) {
         showMessage(data.message, "#166534", "#f0fdf4", "#86efac");
-        scanner.clear();
+        html5QrCode.stop();
       } else {
         showMessage(data.message, "#b91c1c", "#fef2f2", "#fca5a5");
       }
@@ -400,17 +403,32 @@
     });
   }
 
-  function startScanner() {
-    document.getElementById("reader").innerHTML = "";
+function startScanner() {
+  document.getElementById("reader").innerHTML = "";
 
-    scanner = new Html5QrcodeScanner("reader", {
-      fps: 10,
-      qrbox: 250
-    });
+  html5QrCode = new Html5Qrcode("reader");
 
-    scanner.render(onScanSuccess);
-    showMessage("Waiting for scan...", "#374151", "#eff6ff", "#bfdbfe");
-  }
+  Html5Qrcode.getCameras().then(devices => {
+    const cameraId = devices[0].id;
+
+    html5QrCode.start(
+      cameraId,
+      {
+        fps: 10,
+        qrbox: 250
+      },
+      (decodedText) => {
+        console.log("SCANNED:", decodedText);
+        onScanSuccess(decodedText);
+      },
+      (errorMessage) => {
+        // ignore scan errors
+      }
+    );
+  });
+
+  showMessage("Waiting for scan...", "#374151", "#eff6ff", "#bfdbfe");
+}
 
   function restartScanner() {
     startScanner();

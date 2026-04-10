@@ -10,7 +10,7 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "1234", // change if your MySQL password is different
+  password: "", // change if your MySQL password is different
   database: "smart_attendance"
 });
 
@@ -49,6 +49,7 @@ app.post("/login", (req, res) => {
 
   res.json({
     success: true,
+    userId: user.id,
     user
   });
 });

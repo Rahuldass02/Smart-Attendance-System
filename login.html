@@ -395,6 +395,7 @@
       }
 
       try {
+        console.log("Logging in with:", { email, role });
         const res = await fetch("http://localhost:3000/login", {
           method: "POST",
           headers: {
@@ -404,9 +405,15 @@
         });
 
         const data = await res.json();
+        console.log("Login response:", data);
 
         if (data.success) {
-          localStorage.setItem("user", JSON.stringify(data.user));
+          console.log("Setting user to:", { id: data.userId, email, role });
+          localStorage.setItem("user", JSON.stringify({
+            id: data.userId,
+            email,
+            role
+          }));
 
           if (role === "instructor") {
             window.location.href = "instructor.html";
@@ -417,6 +424,7 @@
           errorMsg.innerText = data.message;
         }
       } catch (error) {
+        console.error("Login error:", error);
         errorMsg.innerText = "Server error. Is backend running?";
       }
     }
