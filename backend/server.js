@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 
 /* LOGIN */
 app.post("/login", (req, res) => {
-  const { email, role } = req.body;
+  const { email, role, firstName, lastName } = req.body;
 
   if (!email || !role) {
     return res.json({
@@ -41,10 +41,19 @@ app.post("/login", (req, res) => {
     });
   }
 
+  if (role === "student" && (!firstName || !lastName)) {
+    return res.json({
+      success: false,
+      message: "Missing name information."
+    });
+  }
+
   const user = {
     id: email,
     email,
-    role
+    role,
+    firstName,
+    lastName
   };
 
   res.json({
@@ -81,7 +90,7 @@ app.post("/scan", (req, res) => {
   console.log("SCAN ROUTE HIT");
   console.log("BODY:", req.body);
 
-  const { sessionId, studentId } = req.body;
+  const { sessionId, studentId, firstName, lastName } = req.body;
 
   if (!sessionId || !studentId) {
     return res.json({
@@ -133,8 +142,8 @@ app.post("/scan", (req, res) => {
       console.log("DATE SAVED:", date);
 
       db.query(
-        "INSERT INTO attendance (session_id, student_id, time, date) VALUES (?, ?, ?, ?)",
-        [sessionId, studentId, time, date],
+        "INSERT INTO attendance (session_id, student_id, time, date, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?)",
+        [sessionId, studentId, time, date, firstName || "", lastName || ""],
         (err2) => {
           if (err2) {
             console.error("Insert error:", err2);
@@ -159,7 +168,7 @@ app.get("/attendance/:id", (req, res) => {
   const sessionId = req.params.id;
 
   db.query(
-    "SELECT student_id AS name, time, date FROM attendance WHERE session_id = ?",
+    "SELECT CONCAT(first_name, ' ', last_name) AS name, time, date FROM attendance WHERE session_id = ?",
     [sessionId],
     (err, results) => {
       if (err) {
@@ -177,17 +186,17 @@ app.get("/export/:id", (req, res) => {
   const sessionId = req.params.id;
 
   db.query(
-    "SELECT student_id, time, date FROM attendance WHERE session_id = ?",
+    "SELECT CONCAT(first_name, ' ', last_name) AS name, time, date FROM attendance WHERE session_id = ?",
     [sessionId],
     (err, results) => {
       if (err || results.length === 0) {
         return res.send("No attendance records.");
       }
 
-      let csv = "Student,Time,Date\n";
+      let csv = "Student Name,Time,Date\n";
 
       results.forEach((row) => {
-        csv += `${row.student_id},${row.time},${row.date}\n`;
+        csv += `${row.name},${row.time},${row.date}\n`;
       });
 
       res.header("Content-Type", "text/csv");

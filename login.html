@@ -18,7 +18,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
+      overflow: auto;
+      padding: 20px;
       background:
         radial-gradient(circle at 20% 20%, rgba(90, 160, 255, 0.35), transparent 28%),
         radial-gradient(circle at 15% 85%, rgba(120, 190, 255, 0.25), transparent 24%),
@@ -59,42 +60,44 @@
     }
 
     .container {
-      width: 1200px;
-      max-width: 92%;
-      min-height: 700px;
+      width: 100%;
+      max-width: 1200px;
       display: flex;
       border-radius: 30px;
       overflow: hidden;
       box-shadow: 0 30px 80px rgba(0, 25, 90, 0.35);
       position: relative;
       z-index: 1;
+      min-height: auto;
     }
 
     .left-panel {
       flex: 1;
       color: white;
-      padding: 70px 60px;
+      padding: 50px 40px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       position: relative;
+      min-height: 500px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
       backdrop-filter: blur(2px);
     }
 
     .left-panel .icon-card {
-      width: 150px;
-      height: 150px;
-      border-radius: 32px;
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
       background: rgba(255,255,255,0.18);
       border: 2px solid rgba(255,255,255,0.45);
+      font-size: 60px;
       box-shadow:
         0 0 24px rgba(255,255,255,0.35),
         inset 0 0 18px rgba(255,255,255,0.18);
@@ -115,19 +118,19 @@
     }
 
     .left-panel h1 {
-      font-size: 68px;
-      line-height: 1.05;
+      font-size: clamp(32px, 8vw, 68px);
+      line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 22px;
+      margin-bottom: 16px;
       text-shadow: 0 3px 10px rgba(0,0,0,0.16);
     }
 
     .left-panel p {
-      max-width: 560px;
-      font-size: 24px;
-      line-height: 1.7;
+      max-width: 500px;
+      font-size: clamp(16px, 3vw, 24px);
+      line-height: 1.6;
       color: rgba(255,255,255,0.92);
-      margin-bottom: 46px;
+      margin-bottom: 30px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
@@ -151,12 +154,13 @@
     }
 
     .right-panel {
-      flex: 0.92;
-      padding: 70px 70px 50px;
+      flex: 1;
+      padding: 50px 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
+      min-height: 500px;
       background:
         linear-gradient(135deg, rgba(248,249,255,0.96), rgba(239,242,252,0.98));
     }
@@ -180,44 +184,44 @@
 
     .login-box h2 {
       text-align: center;
-      font-size: 64px;
-      line-height: 1.05;
+      font-size: clamp(32px, 8vw, 64px);
+      line-height: 1.1;
       color: #3f495f;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       font-weight: 700;
     }
 
     .subtitle {
       text-align: center;
       color: #697287;
-      font-size: 18px;
-      margin-bottom: 54px;
+      font-size: clamp(14px, 2vw, 18px);
+      margin-bottom: 35px;
     }
 
     .input-group {
-      margin-bottom: 28px;
+      margin-bottom: 18px;
     }
 
     .input-group label {
       display: block;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       color: #232a39;
     }
 
     .input-group input,
     .input-group select {
       width: 100%;
-      height: 68px;
-      border-radius: 16px;
+      height: 56px;
+      border-radius: 12px;
       border: 2px solid #d7ddea;
       background: rgba(255,255,255,0.75);
-      padding: 0 22px;
-      font-size: 17px;
+      padding: 0 16px;
+      font-size: 15px;
       color: #374151;
       outline: none;
-      box-shadow: 0 10px 22px rgba(68, 85, 130, 0.05);
+      box-shadow: 0 8px 16px rgba(68, 85, 130, 0.04);
       transition: 0.25s ease;
     }
 
@@ -233,17 +237,17 @@
 
     .btn {
       width: 100%;
-      height: 72px;
+      height: 56px;
       border: none;
-      border-radius: 16px;
-      font-size: 22px;
+      border-radius: 12px;
+      font-size: 16px;
       font-weight: 700;
       color: white;
       cursor: pointer;
       background: linear-gradient(90deg, #1d56bf 0%, #2f7cff 100%);
-      box-shadow: 0 18px 30px rgba(40, 110, 230, 0.28);
+      box-shadow: 0 12px 24px rgba(40, 110, 230, 0.24);
       transition: 0.25s ease;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .btn:hover {
@@ -267,70 +271,52 @@
       font-size: 15px;
     }
 
-    @media (max-width: 980px) {
+    @media (max-width: 900px) {
       .container {
         flex-direction: column;
-        min-height: auto;
       }
 
       .left-panel,
       .right-panel {
         width: 100%;
+        min-height: auto;
+        padding: 35px 20px;
       }
 
-      .left-panel {
-        padding: 50px 28px 40px;
-      }
-
-      .right-panel {
-        padding: 40px 24px 36px;
-      }
-
-      .left-panel h1 {
-        font-size: 46px;
-      }
-
-      .left-panel p {
-        font-size: 18px;
-      }
-
-      .login-box h2 {
-        font-size: 46px;
-      }
-
-      .subtitle {
-        font-size: 16px;
-        margin-bottom: 34px;
+      body::before,
+      body::after {
+        display: none;
       }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 500px) {
+      body {
+        padding: 10px;
+      }
+
       .container {
-        max-width: 96%;
-        border-radius: 22px;
+        border-radius: 16px;
       }
 
-      .left-panel h1 {
-        font-size: 38px;
+      .left-panel,
+      .right-panel {
+        padding: 25px 15px;
       }
 
-      .left-panel p {
-        font-size: 16px;
+      .left-panel .icon-card {
+        width: 90px;
+        height: 90px;
+        font-size: 40px;
+      }
+
+      .feature-list {
+        flex-direction: column;
+        gap: 8px;
       }
 
       .feature {
-        font-size: 14px;
-        padding: 12px 18px;
-      }
-
-      .login-box h2 {
-        font-size: 38px;
-      }
-
-      .input-group input,
-      .input-group select,
-      .btn {
-        height: 58px;
+        font-size: 12px;
+        padding: 10px 14px;
       }
     }
   </style>
@@ -360,6 +346,16 @@
         <h2>Welcome Back</h2>
         <p class="subtitle">Sign in to continue to your dashboard</p>
 
+        <div class="input-group" id="firstNameGroup" style="display: none;">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" placeholder="Enter your first name" />
+        </div>
+
+        <div class="input-group" id="lastNameGroup" style="display: none;">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" placeholder="Enter your last name" />
+        </div>
+
         <div class="input-group">
           <label for="email">Email Address</label>
           <input type="email" id="email" placeholder="Enter your email" />
@@ -367,7 +363,7 @@
 
         <div class="input-group">
           <label for="role">Role</label>
-          <select id="role">
+          <select id="role" onchange="toggleNameFields()">
             <option value="student">Student</option>
             <option value="instructor">Instructor</option>
           </select>
@@ -382,9 +378,30 @@
   </div>
 
   <script>
+    function toggleNameFields() {
+      const role = document.getElementById("role").value;
+      const firstNameGroup = document.getElementById("firstNameGroup");
+      const lastNameGroup = document.getElementById("lastNameGroup");
+
+      if (role === "student") {
+        firstNameGroup.style.display = "block";
+        lastNameGroup.style.display = "block";
+      } else {
+        firstNameGroup.style.display = "none";
+        lastNameGroup.style.display = "none";
+      }
+    }
+
+    // Show name fields on page load if student is selected
+    window.addEventListener("DOMContentLoaded", () => {
+      toggleNameFields();
+    });
+
     async function login() {
       const email = document.getElementById("email").value;
       const role = document.getElementById("role").value;
+      const firstName = document.getElementById("firstName").value;
+      const lastName = document.getElementById("lastName").value;
       const errorMsg = document.getElementById("errorMsg");
 
       errorMsg.innerText = "";
@@ -394,26 +411,37 @@
         return;
       }
 
+      if (role === "student" && (!firstName || !lastName)) {
+        errorMsg.innerText = "Please enter first and last name.";
+        return;
+      }
+
       try {
-        console.log("Logging in with:", { email, role });
+        const loginData = { email, role };
+        if (role === "student") {
+          loginData.firstName = firstName;
+          loginData.lastName = lastName;
+        }
+        console.log("Logging in with:", loginData);
         const res = await fetch("http://localhost:3000/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ email, role })
+          body: JSON.stringify(loginData)
         });
 
         const data = await res.json();
         console.log("Login response:", data);
 
         if (data.success) {
-          console.log("Setting user to:", { id: data.userId, email, role });
-          localStorage.setItem("user", JSON.stringify({
-            id: data.userId,
-            email,
-            role
-          }));
+          const userData = { id: data.userId, email, role };
+          if (role === "student") {
+            userData.firstName = firstName;
+            userData.lastName = lastName;
+          }
+          console.log("Setting user to:", userData);
+          localStorage.setItem("user", JSON.stringify(userData));
 
           if (role === "instructor") {
             window.location.href = "instructor.html";

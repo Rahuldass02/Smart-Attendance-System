@@ -383,8 +383,9 @@
       },
       body: JSON.stringify({
         sessionId: decodedText.replace(/\D/g, ""),
-        studentId: user.email
-        
+        studentId: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
       })
     })
     .then(res => res.json())
