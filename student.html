@@ -375,8 +375,15 @@
   }
 
   function onScanSuccess(decodedText) {
+    console.log("User object:", user);
+    console.log("Sending scan with:", {
+      sessionId: decodedText.replace(/\D/g, ""),
+      studentId: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName
+    });
+    
     fetch(`${BACKEND_URL}/scan`, {
-      
       method: "POST",
       headers: {
         "Content-Type": "application/json"
