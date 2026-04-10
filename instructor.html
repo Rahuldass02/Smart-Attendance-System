@@ -256,6 +256,101 @@
       font-size: 14px;
     }
 
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h2 {
+      font-size: 24px;
+      color: #111827;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #d7ddea;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: 0.25s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .modal-buttons .btn-submit {
+      background: linear-gradient(to right, #2563eb, #3b82f6);
+      color: white;
+    }
+
+    .modal-buttons .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+    }
+
+    .modal-buttons .btn-cancel {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .modal-buttons .btn-cancel:hover {
+      background: #e5e7eb;
+    }
+
     @media (max-width: 992px) {
       .main-grid {
         grid-template-columns: 1fr;
@@ -318,13 +413,13 @@
       </div>
 
       <div class="stat-card">
-        <h3>Total Present</h3>
-        <div class="value" id="presentCount">0</div>
+        <h3>Class Info</h3>
+        <div class="value" id="classInfo" style="font-size: 14px; color: #6b7280;">No active session</div>
       </div>
 
       <div class="stat-card">
-        <h3>Export Status</h3>
-        <div class="value" id="exportStatus">Ready</div>
+        <h3>Total Present</h3>
+        <div class="value" id="presentCount">0</div>
       </div>
     </div>
 
@@ -376,13 +471,64 @@
   </div>
 </div>
 
+<!-- Class Info Modal -->
+<div id="classModal" class="modal">
+  <div class="modal-content">
+    <h2>Create New Session</h2>
+    <div class="form-group">
+      <label for="className">Class Name</label>
+      <input type="text" id="className" placeholder="e.g., Introduction to Computer Science">
+    </div>
+    <div class="form-group">
+      <label for="classSection">Class Section</label>
+      <input type="text" id="classSection" placeholder="e.g., Section A">
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-submit" onclick="submitClassInfo()">Generate QR Code</button>
+      <button class="btn-cancel" onclick="closeClassModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
   let currentSessionId = null;
+  let currentClassName = null;
+  let currentClassSection = null;
 
-  async function generateQR() {
+  function openClassModal() {
+    document.getElementById("classModal").classList.add("active");
+    document.getElementById("className").value = "";
+    document.getElementById("classSection").value = "";
+    document.getElementById("className").focus();
+  }
+
+  function closeClassModal() {
+    document.getElementById("classModal").classList.remove("active");
+  }
+
+  async function submitClassInfo() {
+    const className = document.getElementById("className").value.trim();
+    const classSection = document.getElementById("classSection").value.trim();
+
+    if (!className || !classSection) {
+      alert("Please enter both class name and section.");
+      return;
+    }
+
+    closeClassModal();
+    currentClassName = className;
+    currentClassSection = classSection;
+
     try {
       const res = await fetch("http://localhost:3000/generate", {
-        method: "POST"
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          className: className,
+          classSection: classSection
+        })
       });
 
       const data = await res.json();
@@ -399,6 +545,9 @@
         document.getElementById("sessionStatus").innerText = "Active";
         document.getElementById("sessionStatus").style.color = "#16a34a";
 
+        document.getElementById("classInfo").innerText = className + " - " + classSection;
+        document.getElementById("classInfo").style.color = "#111827";
+
         loadAttendance();
       } else {
         document.getElementById("qrMsg").innerText = "Error generating QR code.";
@@ -406,6 +555,10 @@
     } catch (error) {
       document.getElementById("qrMsg").innerText = "Server connection error.";
     }
+  }
+
+  function generateQR() {
+    openClassModal();
   }
 
   async function loadAttendance() {
@@ -463,6 +616,16 @@
     localStorage.removeItem("user");
     window.location.href = "login.html";
   }
+
+  // Close modal when pressing Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeClassModal();
+    }
+    if (e.key === "Enter" && document.getElementById("classModal").classList.contains("active")) {
+      submitClassInfo();
+    }
+  });
 </script>
 
 </body>

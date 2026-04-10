@@ -24,6 +24,8 @@ db.connect((err) => {
 
 let currentSessionId = null;
 let sessionStartTime = null;
+let currentClassName = null;
+let currentClassSection = null;
 const SESSION_DURATION = 5 * 60 * 1000; // 5 minutes
 
 app.get("/", (req, res) => {
@@ -65,8 +67,12 @@ app.post("/login", (req, res) => {
 
 /* GENERATE QR */
 app.post("/generate", async (req, res) => {
+  const { className, classSection } = req.body;
+  
   currentSessionId = Date.now();
   sessionStartTime = Date.now();
+  currentClassName = className || "";
+  currentClassSection = classSection || "";
 
   try {
     const qrImage = await QRCode.toDataURL(currentSessionId.toString());
@@ -159,7 +165,9 @@ app.post("/scan", (req, res) => {
           console.log("Successfully inserted attendance record");
           res.json({
             success: true,
-            message: "Attendance recorded!"
+            message: "Attendance recorded!",
+            className: currentClassName,
+            classSection: currentClassSection
           });
         }
       );
