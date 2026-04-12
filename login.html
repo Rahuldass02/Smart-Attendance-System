@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Attendance Login</title>
+  <title>Smart Attendance</title>
 
   <style>
     * {
@@ -35,8 +35,7 @@
       bottom: -120px;
       width: 520px;
       height: 320px;
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 2px);
+      background: radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 2px);
       background-size: 18px 18px;
       opacity: 0.18;
       transform: rotate(-12deg);
@@ -68,7 +67,6 @@
       box-shadow: 0 30px 80px rgba(0, 25, 90, 0.35);
       position: relative;
       z-index: 1;
-      min-height: auto;
     }
 
     .left-panel {
@@ -80,28 +78,29 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      position: relative;
       min-height: 500px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
       backdrop-filter: blur(2px);
     }
 
-    .left-panel .icon-card {
-      width: 120px;
-      height: 120px;
-      border-radius: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-      background: rgba(255,255,255,0.18);
-      border: 2px solid rgba(255,255,255,0.45);
-      font-size: 60px;
-      box-shadow:
-        0 0 24px rgba(255,255,255,0.35),
-        inset 0 0 18px rgba(255,255,255,0.18);
-      font-size: 64px;
+    .icon-card {
+     width: 120px;
+     height: 120px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     margin-bottom: 20px;
+     background: rgba(255,255,255,0.18);
+     border: 2px solid rgba(255,255,255,0.45);
+     border-radius: 24px;
+     overflow: hidden;
+    }
+
+    .main-logo {
+      width: 115px;
+      height: 115px;
+      object-fit: contain;
+      display: block;
     }
 
     .pill {
@@ -159,27 +158,43 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       min-height: 500px;
-      background:
-        linear-gradient(135deg, rgba(248,249,255,0.96), rgba(239,242,252,0.98));
-    }
-
-    .right-panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(130, 150, 220, 0.12), transparent 32%),
-        linear-gradient(150deg, transparent 0%, transparent 20%, rgba(255,255,255,0.45) 38%, transparent 50%, transparent 100%);
-      pointer-events: none;
+      background: linear-gradient(135deg, rgba(248,249,255,0.96), rgba(239,242,252,0.98));
     }
 
     .login-box {
       width: 100%;
       max-width: 520px;
-      position: relative;
-      z-index: 1;
+    }
+
+    .toggle-row {
+      display: flex;
+      background: #eef2ff;
+      border-radius: 14px;
+      padding: 6px;
+      margin-bottom: 22px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      min-width: 120px;
+      border: none;
+      height: 46px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      color: #4b5563;
+      transition: 0.25s ease;
+    }
+
+    .toggle-btn.active {
+      background: linear-gradient(90deg, #1d56bf 0%, #2f7cff 100%);
+      color: white;
+      box-shadow: 0 10px 20px rgba(40, 110, 230, 0.18);
     }
 
     .login-box h2 {
@@ -195,7 +210,7 @@
       text-align: center;
       color: #697287;
       font-size: clamp(14px, 2vw, 18px);
-      margin-bottom: 35px;
+      margin-bottom: 28px;
     }
 
     .input-group {
@@ -231,8 +246,36 @@
       box-shadow: 0 0 0 4px rgba(79, 141, 255, 0.12);
     }
 
-    .input-group input::placeholder {
-      color: #a0a8b8;
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 90px;
+    }
+
+    .show-btn {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      border: none;
+      background: none;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .password-rules {
+      margin-top: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.6;
     }
 
     .btn {
@@ -255,12 +298,35 @@
       box-shadow: 0 22px 34px rgba(40, 110, 230, 0.34);
     }
 
+    .link-row {
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    .link-btn {
+      background: none;
+      border: none;
+      color: #2563eb;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
     #errorMsg {
       min-height: 24px;
       margin-top: 16px;
       text-align: center;
       font-size: 14px;
       color: #d62828;
+      font-weight: 600;
+    }
+
+    #successMsg {
+      min-height: 24px;
+      margin-top: 8px;
+      text-align: center;
+      font-size: 14px;
+      color: #16a34a;
       font-weight: 600;
     }
 
@@ -303,10 +369,20 @@
         padding: 25px 15px;
       }
 
-      .left-panel .icon-card {
-        width: 90px;
-        height: 90px;
-        font-size: 40px;
+      .icon-card {
+        .icon-card {
+        width: 120px;
+       height: 120px;
+      padding: 10px;
+       overflow: hidden;
+       display: flex;
+       align-items: center;
+      justify-content: center;
+      }
+
+      .main-logo {
+        width: 50px;
+        height: 50px;
       }
 
       .feature-list {
@@ -318,13 +394,19 @@
         font-size: 12px;
         padding: 10px 14px;
       }
+
+      .toggle-btn {
+        min-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="left-panel">
-      <div class="icon-card">📊</div>
+      <div class="icon-card">
+        <img src="logo.png" alt="Logo" class="main-logo">
+      </div>
       <div class="pill">SMART QR ATTENDANCE</div>
 
       <h1>Smart Attendance</h1>
@@ -343,17 +425,28 @@
 
     <div class="right-panel">
       <div class="login-box">
-        <h2>Welcome Back</h2>
-        <p class="subtitle">Sign in to continue to your dashboard</p>
+        <div class="toggle-row">
+          <button id="signInTab" class="toggle-btn active" onclick="setMode('signin')">Sign In</button>
+          <button id="signUpTab" class="toggle-btn" onclick="setMode('signup')">Sign Up</button>
+          <button id="forgotTab" class="toggle-btn" onclick="setMode('forgot')">Forgot Password</button>
+        </div>
 
-        <div class="input-group" id="firstNameGroup" style="display: none;">
+        <h2 id="formTitle">Welcome Back</h2>
+        <p class="subtitle" id="formSubtitle">Sign in to continue to your dashboard</p>
+
+        <div class="input-group" id="firstNameGroup" style="display:none;">
           <label for="firstName">First Name</label>
           <input type="text" id="firstName" placeholder="Enter your first name" />
         </div>
 
-        <div class="input-group" id="lastNameGroup" style="display: none;">
+        <div class="input-group" id="lastNameGroup" style="display:none;">
           <label for="lastName">Last Name</label>
           <input type="text" id="lastName" placeholder="Enter your last name" />
+        </div>
+
+        <div class="input-group" id="universityGroup" style="display:none;">
+          <label for="university">University Name</label>
+          <input type="text" id="university" placeholder="Enter your university name" />
         </div>
 
         <div class="input-group">
@@ -361,101 +454,321 @@
           <input type="email" id="email" placeholder="Enter your email" />
         </div>
 
-        <div class="input-group">
+        <div class="input-group" id="roleGroup">
           <label for="role">Role</label>
-          <select id="role" onchange="toggleNameFields()">
+          <select id="role">
             <option value="student">Student</option>
             <option value="instructor">Instructor</option>
           </select>
         </div>
 
-        <button class="btn" onclick="login()">Sign In</button>
+        <div class="input-group" id="passwordGroup">
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input type="password" id="password" placeholder="Enter your password" />
+            <button type="button" class="show-btn" onclick="togglePassword('password', this)">Show</button>
+          </div>
+          <div class="password-rules" id="passwordRules" style="display:none;">
+            Password must contain:
+            <br>• at least 8 characters
+            <br>• at least 1 uppercase letter
+            <br>• at least 1 lowercase letter
+            <br>• at least 1 number
+            <br>• at least 1 special symbol
+          </div>
+        </div>
+
+        <div class="input-group" id="confirmPasswordGroup" style="display:none;">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-wrap">
+            <input type="password" id="confirmPassword" placeholder="Confirm your password" />
+            <button type="button" class="show-btn" onclick="togglePassword('confirmPassword', this)">Show</button>
+          </div>
+        </div>
+
+        <div class="input-group" id="newPasswordGroup" style="display:none;">
+          <label for="newPassword">New Password</label>
+          <div class="password-wrap">
+            <input type="password" id="newPassword" placeholder="Enter your new password" />
+            <button type="button" class="show-btn" onclick="togglePassword('newPassword', this)">Show</button>
+          </div>
+          <div class="password-rules" id="newPasswordRules" style="display:none;">
+            Password must contain:
+            <br>• at least 8 characters
+            <br>• at least 1 uppercase letter
+            <br>• at least 1 lowercase letter
+            <br>• at least 1 number
+            <br>• at least 1 special symbol
+          </div>
+        </div>
+
+        <button class="btn" id="mainButton" onclick="handleSubmit()">Sign In</button>
+
+        <div class="link-row" id="signinForgotRow">
+          <button class="link-btn" onclick="setMode('forgot')">Forgot password?</button>
+        </div>
 
         <p id="errorMsg"></p>
+        <p id="successMsg"></p>
         <div class="footer">Smart Attendance System</div>
       </div>
     </div>
   </div>
 
   <script>
-    function toggleNameFields() {
-      const role = document.getElementById("role").value;
-      const firstNameGroup = document.getElementById("firstNameGroup");
-      const lastNameGroup = document.getElementById("lastNameGroup");
+    const BACKEND_URL = "http://localhost:3000";
+    let currentMode = "signin";
 
-      if (role === "student") {
-        firstNameGroup.style.display = "block";
-        lastNameGroup.style.display = "block";
+    function clearMessages() {
+      document.getElementById("errorMsg").innerText = "";
+      document.getElementById("successMsg").innerText = "";
+    }
+
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        btn.innerText = "Hide";
       } else {
-        firstNameGroup.style.display = "none";
-        lastNameGroup.style.display = "none";
+        input.type = "password";
+        btn.innerText = "Show";
       }
     }
 
-    // Show name fields on page load if student is selected
-    window.addEventListener("DOMContentLoaded", () => {
-      toggleNameFields();
-    });
+    function isStrongPassword(password) {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+      return regex.test(password);
+    }
 
-    async function login() {
-      const email = document.getElementById("email").value;
+    function setMode(mode) {
+      currentMode = mode;
+      clearMessages();
+
+      const signInTab = document.getElementById("signInTab");
+      const signUpTab = document.getElementById("signUpTab");
+      const forgotTab = document.getElementById("forgotTab");
+
+      const formTitle = document.getElementById("formTitle");
+      const formSubtitle = document.getElementById("formSubtitle");
+      const mainButton = document.getElementById("mainButton");
+
+      const firstNameGroup = document.getElementById("firstNameGroup");
+      const lastNameGroup = document.getElementById("lastNameGroup");
+      const universityGroup = document.getElementById("universityGroup");
+      const roleGroup = document.getElementById("roleGroup");
+      const passwordGroup = document.getElementById("passwordGroup");
+      const confirmPasswordGroup = document.getElementById("confirmPasswordGroup");
+      const newPasswordGroup = document.getElementById("newPasswordGroup");
+      const signinForgotRow = document.getElementById("signinForgotRow");
+      const passwordRules = document.getElementById("passwordRules");
+      const newPasswordRules = document.getElementById("newPasswordRules");
+
+      signInTab.classList.remove("active");
+      signUpTab.classList.remove("active");
+      forgotTab.classList.remove("active");
+
+      if (mode === "signin") {
+        signInTab.classList.add("active");
+        formTitle.innerText = "Welcome Back";
+        formSubtitle.innerText = "Sign in to continue to your dashboard";
+        mainButton.innerText = "Sign In";
+
+        firstNameGroup.style.display = "none";
+        lastNameGroup.style.display = "none";
+        universityGroup.style.display = "none";
+        roleGroup.style.display = "block";
+        passwordGroup.style.display = "block";
+        confirmPasswordGroup.style.display = "none";
+        newPasswordGroup.style.display = "none";
+        signinForgotRow.style.display = "block";
+        passwordRules.style.display = "none";
+        newPasswordRules.style.display = "none";
+      }
+
+      if (mode === "signup") {
+        signUpTab.classList.add("active");
+        formTitle.innerText = "Create Account";
+        formSubtitle.innerText = "Create a new account for smart attendance";
+        mainButton.innerText = "Sign Up";
+
+        firstNameGroup.style.display = "block";
+        lastNameGroup.style.display = "block";
+        universityGroup.style.display = "block";
+        roleGroup.style.display = "block";
+        passwordGroup.style.display = "block";
+        confirmPasswordGroup.style.display = "block";
+        newPasswordGroup.style.display = "none";
+        signinForgotRow.style.display = "none";
+        passwordRules.style.display = "block";
+        newPasswordRules.style.display = "none";
+      }
+
+      if (mode === "forgot") {
+        forgotTab.classList.add("active");
+        formTitle.innerText = "Reset Password";
+        formSubtitle.innerText = "Enter your email and create a new password";
+        mainButton.innerText = "Reset Password";
+
+        firstNameGroup.style.display = "none";
+        lastNameGroup.style.display = "none";
+        universityGroup.style.display = "none";
+        roleGroup.style.display = "none";
+        passwordGroup.style.display = "none";
+        confirmPasswordGroup.style.display = "none";
+        newPasswordGroup.style.display = "block";
+        signinForgotRow.style.display = "none";
+        passwordRules.style.display = "none";
+        newPasswordRules.style.display = "block";
+      }
+    }
+
+    function handleSubmit() {
+      if (currentMode === "signin") login();
+      if (currentMode === "signup") signup();
+      if (currentMode === "forgot") forgotPassword();
+    }
+
+    async function signup() {
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const university = document.getElementById("university").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
       const role = document.getElementById("role").value;
-      const firstName = document.getElementById("firstName").value;
-      const lastName = document.getElementById("lastName").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
       const errorMsg = document.getElementById("errorMsg");
+      const successMsg = document.getElementById("successMsg");
 
-      errorMsg.innerText = "";
+      clearMessages();
 
-      if (!email) {
-        errorMsg.innerText = "Please enter email.";
+      if (!firstName || !lastName || !university || !email || !role || !password || !confirmPassword) {
+        errorMsg.innerText = "Please fill all sign up fields.";
         return;
       }
 
-      if (role === "student" && (!firstName || !lastName)) {
-        errorMsg.innerText = "Please enter first and last name.";
+      if (!isStrongPassword(password)) {
+        errorMsg.innerText = "Password must be 8+ chars and include uppercase, lowercase, number, and special symbol.";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorMsg.innerText = "Passwords do not match.";
         return;
       }
 
       try {
-        const loginData = { email, role };
-        if (role === "student") {
-          loginData.firstName = firstName;
-          loginData.lastName = lastName;
-        }
-        console.log("Logging in with:", loginData);
-        const res = await fetch("http://localhost:3000/login", {
+        const res = await fetch(`${BACKEND_URL}/signup`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(loginData)
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            university,
+            email,
+            role,
+            password
+          })
         });
 
         const data = await res.json();
-        console.log("Login response:", data);
 
         if (data.success) {
-          const userData = { id: data.userId, email, role };
-          if (role === "student") {
-            userData.firstName = firstName;
-            userData.lastName = lastName;
-          }
-          console.log("Setting user to:", userData);
-          localStorage.setItem("user", JSON.stringify(userData));
+          successMsg.innerText = "Signup complete! You can sign in now.";
+          document.getElementById("firstName").value = "";
+          document.getElementById("lastName").value = "";
+          document.getElementById("university").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("password").value = "";
+          document.getElementById("confirmPassword").value = "";
+          setTimeout(() => setMode("signin"), 1200);
+        } else {
+          errorMsg.innerText = data.message || "Signup failed.";
+        }
+      } catch (error) {
+        errorMsg.innerText = "Server error. Is backend running?";
+      }
+    }
 
-          if (role === "instructor") {
+    async function login() {
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const role = document.getElementById("role").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      clearMessages();
+
+      if (!email || !password) {
+        errorMsg.innerText = "Please enter email and password.";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, role, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          if (data.user.role === "instructor") {
             window.location.href = "instructor.html";
           } else {
             window.location.href = "student.html";
           }
         } else {
-          errorMsg.innerText = data.message;
+          errorMsg.innerText = data.message || "Login failed.";
         }
       } catch (error) {
-        console.error("Login error:", error);
         errorMsg.innerText = "Server error. Is backend running?";
       }
     }
+
+    async function forgotPassword() {
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const newPassword = document.getElementById("newPassword").value;
+      const errorMsg = document.getElementById("errorMsg");
+      const successMsg = document.getElementById("successMsg");
+
+      clearMessages();
+
+      if (!email || !newPassword) {
+        errorMsg.innerText = "Please enter email and new password.";
+        return;
+      }
+
+      if (!isStrongPassword(newPassword)) {
+        errorMsg.innerText = "New password must be 8+ chars and include uppercase, lowercase, number, and special symbol.";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, newPassword })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          successMsg.innerText = "Password updated successfully. Sign in now.";
+          document.getElementById("newPassword").value = "";
+          setTimeout(() => setMode("signin"), 1200);
+        } else {
+          errorMsg.innerText = data.message || "Could not reset password.";
+        }
+      } catch (error) {
+        errorMsg.innerText = "Server error. Is backend running?";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      setMode("signin");
+    });
   </script>
 </body>
 </html>

@@ -222,7 +222,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 500px;
+      min-width: 700px;
       background: white;
     }
 
@@ -452,15 +452,16 @@
             <thead>
               <tr>
                 <th style="width: 40px;">#</th>
-                <th style="width: 160px;">Student ID</th>
+                <th style="width: 180px;">Student ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th style="width: 130px;">Time</th>
+                <th style="width: 140px;">Date</th>
               </tr>
             </thead>
             <tbody id="attendanceList">
               <tr>
-                <td colspan="5" class="empty-state">No attendance records yet.</td>
+                <td colspan="6" class="empty-state">No attendance records yet.</td>
               </tr>
             </tbody>
           </table>
@@ -471,7 +472,6 @@
   </div>
 </div>
 
-<!-- Class Info Modal -->
 <div id="classModal" class="modal">
   <div class="modal-content">
     <h2>Create New Session</h2>
@@ -574,7 +574,7 @@
       if (data.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="5" class="empty-state">No attendance records yet.</td>
+            <td colspan="6" class="empty-state">No attendance records yet.</td>
           </tr>
         `;
       } else {
@@ -586,6 +586,7 @@
               <td>${student.first_name}</td>
               <td>${student.last_name}</td>
               <td>${student.time}</td>
+              <td>${student.date}</td>
             </tr>
           `;
         });
@@ -606,9 +607,6 @@
       return;
     }
 
-    document.getElementById("exportStatus").innerText = "Exported";
-    document.getElementById("exportStatus").style.color = "#2563eb";
-
     window.open(`http://localhost:3000/export/${currentSessionId}`, "_blank");
   }
 
@@ -617,7 +615,6 @@
     window.location.href = "login.html";
   }
 
-  // Close modal when pressing Escape
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeClassModal();
