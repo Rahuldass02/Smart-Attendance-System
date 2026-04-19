@@ -69,9 +69,9 @@ node server.js
 👥 Team Responsibilities
 Rahul Das: Frontend Development & UI/UX Design.
 
-Farhan Kabiri: Backend Logic, QR Generation, and API functionality.
+Farhan Kabiri: Backend Logic, Database Design QR Generation, and API functionality.
 
-Tanim Ahmed: Database Design, Security Testing, and Documentation.
+Tanim Ahmed:  UI/UX Design, Security Testing, and Documentation.
 
 🧪 Testing Procedures
 To ensure system integrity, we perform the following tests:
